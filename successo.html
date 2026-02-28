@@ -15,36 +15,28 @@
         }
         .card {
             background: rgba(62, 39, 35, 0.9); backdrop-filter: blur(10px);
-            padding: 40px 25px; border-radius: 24px; border: 1px solid rgba(255, 193, 7, 0.3);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6); width: 100%; max-width: 400px;
-            animation: slideUp 0.5s ease-out;
+            padding: 40px 25px; border-radius: 24px; border: 1px solid rgba(255, 193, 7, 0.2);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            max-width: 450px; width: 100%;
         }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .icon-circle {
-            width: 80px; height: 80px; background: rgba(37, 211, 102, 0.1);
+            width: 80px; height: 80px; background: linear-gradient(45deg, #4CAF50, #81C784);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 20px; border: 2px solid #25D366;
+            margin: 0 auto 20px; font-size: 2.5rem; color: #fff;
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
         }
-        .icon-circle i { font-size: 2.5rem; color: #25D366; }
-        h1 { font-size: 1.8rem; color: #ffc107; margin-bottom: 15px; font-weight: 800; line-height: 1.2; }
-        p { font-size: 1rem; color: #bcaaa4; margin-bottom: 30px; line-height: 1.6; }
+        h1 { font-size: 1.8rem; margin-bottom: 15px; color: #ffc107; font-weight: 800; }
+        p { font-size: 1rem; color: #bcaaa4; line-height: 1.6; margin-bottom: 30px; }
         .highlight { color: #f8f1e7; font-weight: 600; }
         
         .btn-whatsapp {
-            background: linear-gradient(45deg, #25D366, #128C7E); color: white;
-            border: none; padding: 18px 20px; border-radius: 50px; font-size: 1.1rem; 
-            font-weight: 800; cursor: pointer; display: flex; justify-content: center; 
-            align-items: center; gap: 10px; width: 100%; text-decoration: none;
-            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3); transition: transform 0.2s;
-            animation: pulse 2s infinite;
+            background: #25D366; color: #fff; border: none; padding: 18px 30px;
+            border-radius: 50px; font-size: 1.1rem; font-weight: 800;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            gap: 10px; width: 100%; text-transform: uppercase;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3); transition: all 0.3s;
         }
-        .btn-whatsapp:active { transform: scale(0.96); }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
-            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-        }
+        .btn-whatsapp:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(37, 211, 102, 0.4); }
     </style>
 </head>
 <body>
@@ -71,18 +63,26 @@
                 return;
             }
 
-            // Aggiungiamo il timbro e corretto il nome del gateway in SumUp!
-            let finalMessage = "✅ *ORDINE PAGATO ONLINE (SumUp)*%0A%0A" + orderMessage;
+            // 1. Pulisce il testo dai vecchi codici "%0A" (a capo grezzi) 
+            // e li trasforma in reali a capo \n
+            orderMessage = orderMessage.replace(/%0A/g, '\n');
+
+            // 2. Crea il messaggio finale
+            let finalMessage = "✅ *ORDINE PAGATO ONLINE (SumUp)*\n\n" + orderMessage;
             
             // INSERISCI QUI IL NUMERO DI PETER BUN
             const phoneNumber = "393751477928"; 
             
-            window.location.href = `https://wa.me/${phoneNumber}?text=${finalMessage}`;
+            // 3. LA MAGIA: Codifica in modo sicuro TUTTO il messaggio (inclusi gli spazi e le emoji)
+            // in un formato perfettamente digeribile dai link web
+            let urlSafeMessage = encodeURIComponent(finalMessage);
             
-            // Opzionale: decommenta la riga sotto se vuoi svuotare la memoria dopo l'invio
-            localStorage.removeItem('peterbun_order_message');
+            // 4. Apri WhatsApp
+            window.location.href = `https://wa.me/${phoneNumber}?text=${urlSafeMessage}`;
+            
+            // Opzionale: pulisce la memoria una volta inviato (rimuovi i commenti per attivarlo)
+            // localStorage.removeItem('peterbun_order_message');
         }
     </script>
-
 </body>
 </html>
