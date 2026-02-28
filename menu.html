@@ -24,6 +24,39 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: linear-gradient(to bottom, var(--bg-dark), var(--bg-choco)); color: var(--text-cream); padding-bottom: 120px; min-height: 100vh; }
 
+        /* PROMO BAR */
+        .promo-bar {
+            background: linear-gradient(45deg, var(--accent-orange), #ff5722);
+            color: #fff;
+            text-align: center;
+            padding: 10px 15px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 200;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+        }
+
+        /* ALERTS GAMIFICATION SCONTI */
+        .promo-alert {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px dashed var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .promo-alert.success {
+            background: rgba(255, 152, 0, 0.15);
+            border-color: var(--accent-orange);
+            color: #ffb74d;
+        }
+
         /* HEADER */
         header { position: relative; text-align: center; padding: 30px 20px 70px; background: var(--bg-header); overflow: hidden; }
         .header-content { position: relative; z-index: 2; }
@@ -111,6 +144,7 @@
             max-height: 220px; 
             overflow-y: auto;
             box-shadow: inset 0 4px 10px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
         }
         .recap-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; margin-bottom: 12px; border-bottom: 1px dashed rgba(255,193,7,0.1); padding-bottom: 12px;}
         .recap-item:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0;}
@@ -180,22 +214,23 @@
 
         /* BOX AVVISO CHECKOUT */
         .alert-box {
-            background: rgba(255, 193, 7, 0.12);
-            border: 1px dashed var(--accent-gold);
+            background: rgba(255, 193, 7, 0.05);
+            border: 1px solid rgba(255, 193, 7, 0.2);
             padding: 20px;
             border-radius: 16px;
             margin-bottom: 20px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-cream);
             line-height: 1.6;
             text-align: left;
         }
+        .alert-box strong { color: var(--accent-gold); }
 
         /* FOOTER CARRELLO */
         .cart-footer { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(26, 15, 15, 0.98); padding: 15px 20px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--accent-gold); transform: translateY(120%); transition: transform 0.3s ease; z-index: 1000; border-radius: 20px 20px 0 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.5);}
         .cart-footer.visible { transform: translateY(0); }
-        .cart-total { font-size: 1.3rem; font-weight: 900; color: var(--accent-gold); }
-        .cart-total span { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+        .cart-total { font-size: 1.3rem; font-weight: 900; color: var(--accent-gold); display: flex; align-items: center;}
+        .cart-total span { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px;}
         .btn-checkout { background: linear-gradient(45deg, var(--accent-gold), #ff9800); color: #3e2723; border: none; padding: 12px 24px; border-radius: 50px; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(255,193,7,0.3);}
 
         /* MEDIA QUERIES */
@@ -210,6 +245,10 @@
     </style>
 </head>
 <body>
+
+    <div class="promo-bar">
+        🔥 SCONTO 10% SOPRA I 15€ | SCONTO 20% SOPRA I 30€ 🔥
+    </div>
 
     <header>
         <div class="header-content">
@@ -226,7 +265,10 @@
     <div id="menu-container" class="menu-container"></div>
 
     <div class="cart-footer" id="cart-footer">
-        <div class="cart-total"><span>Totale Ordine</span><div id="total-price">0,00 €</div></div>
+        <div>
+            <span>Totale Ordine</span>
+            <div class="cart-total" id="total-price">0,00 €</div>
+        </div>
         <button class="btn-checkout" onclick="openRecap()"><i class="fa-solid fa-cart-shopping"></i> Checkout</button>
     </div>
 
@@ -238,8 +280,7 @@
             </div>
             <div class="modal-body">
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Seleziona gli ingredienti che desideri RIMUOVERE dal prodotto.</p>
-                <div class="custom-group" id="custom-dynamic-sections">
-                    </div>
+                <div class="custom-group" id="custom-dynamic-sections"></div>
             </div>
             <div style="padding: 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,193,7,0.2); position: sticky; bottom: 0;">
                 <button class="btn-confirm-order" onclick="addCustomItemToCart()">
@@ -256,14 +297,14 @@
                 <i class="fa-solid fa-xmark close-modal" onclick="closeRecap()"></i>
             </div>
             <div class="modal-body">
-                <div class="recap-list" id="recap-list-container">
-                    </div>
+                <div class="recap-list" id="recap-list-container"></div>
+                
+                <div id="recap-promo-alert"></div>
                 
                 <h4 style="color: var(--accent-gold); margin-top: 25px; font-size: 1.1rem; font-weight: 800;">Ti manca qualcosa?</h4>
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Abbiamo pensato che questi potessero piacerti:</p>
                 
-                <div class="upsell-container" id="upsell-container">
-                    </div>
+                <div class="upsell-container" id="upsell-container"></div>
             </div>
             <div style="padding: 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,193,7,0.2); position: sticky; bottom: 0;">
                 <button class="btn-confirm-order" onclick="proceedToCheckout()">
@@ -280,6 +321,9 @@
                 <i class="fa-solid fa-xmark close-modal" onclick="closeCheckout()"></i>
             </div>
             <div class="modal-body">
+                
+                <div id="checkout-order-info"></div>
+
                 <div id="sumup-card-container" style="display: none; background: white; padding: 10px; border-radius: 10px; margin-bottom: 15px;">
                     <div id="sumup-card"></div>
                 </div>
@@ -299,11 +343,11 @@
                     </div>
                     
                     <div class="alert-box">
-                        <p><i class="fa-brands fa-whatsapp" style="color: var(--accent-gold);"></i> <strong>⚠️ ATTENZIONE ORDINI AUTOMATICI:</strong> Il numero WhatsApp che riceverà la comanda è un sistema automatico. <u>NON risponde ai messaggi o alle chiamate telefonice</u>.</p>
-                        <br>
-                        <p><i class="fa-solid fa-ban" style="color: #ff5252;"></i> <strong>🚫 NESSUN ANNULLAMENTO:</strong> Una volta completato il pagamento su SumUp, l'ordine è confermato e <u>NON potrà essere annullato o rimborsato</u>.</p>
-                        <br>
-                        <p style="font-size: 0.8rem; color: var(--text-muted);">Passa a ritirarlo in negozio per l'orario scelto (non siamo responsabili per prodotti consumati freddi in caso di tuo ritardo).</p>
+                        <p><i class="fa-regular fa-clock" style="color: var(--accent-gold);"></i> <strong>ORARI E QUALITÀ:</strong> Nei momenti di punta, le preparazioni potrebbero subire un ritardo di 15-20 minuti. Ti chiediamo comunque di <strong>arrivare puntuale</strong> all'orario scelto. <em>Credici, è molto meglio aspettare 10 minuti al locale per goderti un dolce appena sfornato, piuttosto che farlo raffreddare sul bancone aspettando te! 😉</em><br><span style="font-size: 0.75rem; color: var(--text-muted);">(Non saremo responsabili per prodotti non ottimali a causa di un tuo ritardo nel ritiro).</span></p>
+                        
+                        <hr style="border: 0; border-top: 1px dashed rgba(255,193,7,0.3); margin: 15px 0;">
+                        
+                        <p><i class="fa-solid fa-ban" style="color: #ff5252;"></i> <strong>REGOLE ORDINE:</strong> Dopo il pagamento su SumUp, l'ordine va in preparazione e <u>non è annullabile né rimborsabile</u>. Il numero WhatsApp è un sistema automatico e non riceve chiamate o messaggi.</p>
                     </div>
                     
                     <button class="btn-confirm-order" onclick="sendOrderWithDetails()" id="pay-btn">
@@ -499,14 +543,33 @@
         }
 
         function updateCartUI() {
-            let total = 0, totalItems = 0;
+            let subtotal = 0, totalItems = 0;
             for(let id in cart) {
                 if (cart[id] > 0 && itemMap[id]) {
-                    total += itemMap[id].price * cart[id]; 
+                    subtotal += itemMap[id].price * cart[id]; 
                     totalItems += cart[id];
                 }
             }
-            document.getElementById('total-price').innerText = total.toFixed(2).replace('.',',') + ' €';
+
+            // CALCOLO SCONTI: 10% a 15€, 20% a 30€
+            let discountRate = 0;
+            if(subtotal >= 30) discountRate = 0.20;
+            else if(subtotal >= 15) discountRate = 0.10;
+
+            let total = subtotal * (1 - discountRate);
+
+            let priceHtml = '';
+            if(discountRate > 0) {
+                priceHtml = `<div style="display:flex; align-items:center;">
+                    <span style="text-decoration:line-through; font-size:0.9rem; color:var(--text-muted); margin-right:8px; display:inline;">${subtotal.toFixed(2).replace('.',',')}€</span>
+                    ${total.toFixed(2).replace('.',',')} € 
+                    <span style="font-size:0.85rem; color:#ff5722; font-weight:900; margin-left:8px; display:inline;">-${discountRate*100}%</span>
+                </div>`;
+            } else {
+                priceHtml = `${total.toFixed(2).replace('.',',')} €`;
+            }
+
+            document.getElementById('total-price').innerHTML = priceHtml;
             const footer = document.getElementById('cart-footer');
             if (totalItems > 0) footer.classList.add('visible'); else footer.classList.remove('visible');
         }
@@ -588,11 +651,10 @@
             closeCustomModal();
         }
 
-        // FUNZIONE PER RIMUOVERE ITEM DAL RECAP
         function removeFromRecap(id) {
             if(cart[id] > 0) {
-                updateQty(id, -cart[id]); // Azzera la quantità nel carrello reale
-                openRecap(); // Ricarica il recap aggiornato
+                updateQty(id, -cart[id]);
+                openRecap();
             }
         }
 
@@ -601,15 +663,17 @@
             recapContainer.innerHTML = '';
             
             let totalCartItems = 0;
+            let subtotal = 0;
 
             for(let id in cart) {
                 if (cart[id] > 0 && itemMap[id]) {
                     totalCartItems += cart[id];
                     let item = itemMap[id];
                     let lineTotal = item.price * cart[id];
+                    subtotal += lineTotal;
+
                     let customTesto = item.isCustom && item.removed.length > 0 ? `<br><small style="color:var(--text-muted);">- Senza ${item.removed.join(', ')}</small>` : "";
                     
-                    // Aggiunto il tasto cestino
                     recapContainer.innerHTML += `
                         <div class="recap-item">
                             <div class="recap-item-info"><strong>${cart[id]}x</strong> ${item.name} ${customTesto}</div>
@@ -622,10 +686,21 @@
                 }
             }
 
-            // Se il carrello è stato svuotato tutto dal recap, chiudilo
             if (totalCartItems === 0) {
                 closeRecap();
                 return;
+            }
+
+            // GAMIFICATION SCONTI
+            const promoAlertBox = document.getElementById('recap-promo-alert');
+            if(subtotal < 15) {
+                let missing = 15 - subtotal;
+                promoAlertBox.innerHTML = `<div class="promo-alert">Aggiungi <strong>${missing.toFixed(2).replace('.',',')}€</strong> per sbloccare il <strong>10% di Sconto</strong>!</div>`;
+            } else if (subtotal < 30) {
+                let missing = 30 - subtotal;
+                promoAlertBox.innerHTML = `<div class="promo-alert success">🔥 Hai sbloccato il <strong>10% di sconto</strong>!<br>Aggiungi <strong>${missing.toFixed(2).replace('.',',')}€</strong> per avere il <strong>20% di Sconto</strong>.</div>`;
+            } else {
+                promoAlertBox.innerHTML = `<div class="promo-alert success">🔥 COMPLIMENTI! Hai sbloccato il <strong>MASSIMO SCONTO (20%)</strong>! 🔥</div>`;
             }
 
             const upsellContainer = document.getElementById('upsell-container');
@@ -677,6 +752,46 @@
         function proceedToCheckout() {
             closeRecap();
             popolaOrari();
+
+            // COSTRUISCI MINI RIEPILOGO NEL CHECKOUT
+            let subtotal = 0;
+            for(let id in cart) {
+                if(cart[id]>0 && itemMap[id]) subtotal += itemMap[id].price * cart[id];
+            }
+            
+            let discountRate = 0;
+            if(subtotal >= 30) discountRate = 0.20;
+            else if(subtotal >= 15) discountRate = 0.10;
+
+            let discountAmount = subtotal * discountRate;
+            let total = subtotal - discountAmount;
+
+            let infoHtml = `<div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid rgba(255,193,7,0.2);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.95rem; color:var(--text-cream);"><span>Subtotale:</span> <span>${subtotal.toFixed(2).replace('.',',')}€</span></div>`;
+            
+            if(discountRate > 0) {
+                infoHtml += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; color:#ffb74d; font-weight:bold; font-size:0.95rem;"><span>Sconto applicato (${discountRate*100}%):</span> <span>-${discountAmount.toFixed(2).replace('.',',')}€</span></div>`;
+            }
+
+            infoHtml += `<div style="display:flex; justify-content:space-between; margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,193,7,0.2); font-weight:900; font-size:1.3rem; color:var(--accent-gold);"><span>TOTALE:</span> <span>${total.toFixed(2).replace('.',',')}€</span></div></div>`;
+
+            // AVVISO SCONTO NEL CHECKOUT CON TASTO
+            if(subtotal < 15) {
+                let missing = 15 - subtotal;
+                infoHtml += `<div class="promo-alert" style="cursor:pointer;" onclick="closeCheckout(); openRecap();">
+                    Aggiungi solo <strong>${missing.toFixed(2).replace('.',',')}€</strong> per avere il <strong>10% di Sconto</strong>!<br>
+                    <span style="text-decoration:underline; font-size:0.8rem; font-weight:bold;">Clicca qui per aggiungere altro</span>
+                </div>`;
+            } else if(subtotal < 30) {
+                let missing = 30 - subtotal;
+                infoHtml += `<div class="promo-alert success" style="cursor:pointer;" onclick="closeCheckout(); openRecap();">
+                    🔥 Sconto 10% Attivo! Aggiungi <strong>${missing.toFixed(2).replace('.',',')}€</strong> per il <strong>20%</strong>!<br>
+                    <span style="text-decoration:underline; font-size:0.8rem; font-weight:bold; color:var(--accent-gold);">Clicca qui per aggiungere altro</span>
+                </div>`;
+            }
+
+            document.getElementById('checkout-order-info').innerHTML = infoHtml;
+
             document.getElementById('dati-cliente-form').style.display = 'block';
             document.getElementById('sumup-card-container').style.display = 'none';
             document.getElementById('checkout-modal').classList.add('active'); 
@@ -736,7 +851,7 @@
             const randomNum = Math.floor(1000 + Math.random() * 9000);
             const orderId = `PB-${firstLetter}${lastLetter}-${randomNum}_${orario}`;
 
-            let cartItems = []; let total = 0; 
+            let cartItems = []; let subtotal = 0; 
             let text = `*NUOVO ORDINE!* 🍩%0A🆔 *Rif:* ${orderId}%0A%0A👤 *Cliente:* ${name}%0A🕒 *Ritiro in negozio alle:* ${orario}%0A`;
             if(notes) text += `📝 *Note:* ${notes}%0A`; 
             text += `%0A*RIEPILOGO ORDINE:*%0A`;
@@ -746,11 +861,26 @@
                     let item = itemMap[id];
                     cartItems.push({ name: item.name, price: item.price, qty: cart[id] });
                     const lineTotal = item.price * cart[id]; 
-                    total += lineTotal;
+                    subtotal += lineTotal;
                     
                     let customTesto = item.isCustom && item.removed.length > 0 ? `%0A   ↳ Senza: ${item.removed.join(', ')}` : "";
                     text += `▫️ ${cart[id]}x ${item.name} (${lineTotal.toFixed(2)}€)${customTesto}%0A`;
                 }
+            }
+
+            // APPLICAZIONE SCONTO AL TOTALE PER SUMUP
+            let discountRate = 0;
+            if(subtotal >= 30) discountRate = 0.20;
+            else if(subtotal >= 15) discountRate = 0.10;
+
+            let total = subtotal;
+
+            if(discountRate > 0) {
+                let discountAmount = subtotal * discountRate;
+                total = subtotal - discountAmount;
+                // Aggiungiamo lo sconto all'array per SumUp
+                cartItems.push({ name: `Sconto PROMO ${discountRate*100}%`, price: -discountAmount, qty: 1 });
+                text += `%0A🎁 *SCONTO APPLICATO (${discountRate*100}%):* -${discountAmount.toFixed(2)}€%0A`;
             }
 
             if (total < 1.00) { alert("Attenzione: L'ordine minimo per SumUp è 1.00 €!"); return; }
@@ -772,6 +902,7 @@
                 
                 if (data.checkoutId) { 
                     document.getElementById('dati-cliente-form').style.display = 'none';
+                    document.getElementById('checkout-order-info').style.display = 'none';
                     document.getElementById('sumup-card-container').style.display = 'block';
                     
                     SumUpCard.mount({
