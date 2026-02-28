@@ -158,6 +158,16 @@
         .info-card p { color: var(--text-muted); line-height: 1.8; font-weight: 500; font-size: 1.05rem; margin-bottom: 8px;}
         .info-card p strong { color: var(--text-dark); }
         
+        /* Stile Link Indirizzo Mappa */
+        .map-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .map-link:hover {
+            color: var(--accent-orange);
+        }
+
         /* Box Avviso Instagram/No-Whatsapp */
         .alert-box-info {
             background: rgba(255, 82, 82, 0.08);
@@ -254,7 +264,11 @@
                 <p><strong>Ven - Sab:</strong> 18:00 - 02:30</p>
                 <p><strong>Domenica:</strong> 17:30 - 01:00</p>
                 <div style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed rgba(62, 39, 35, 0.2);">
-                    <p style="color: var(--text-dark);">📍 <strong>Viale Cappiello 28, Caserta</strong></p>
+                    <p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Viale+Cappiello+28,+Caserta" target="_blank" class="map-link">
+                            📍 <strong>Viale Cappiello 28, Caserta</strong> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.8rem; margin-left: 5px; color: var(--accent-orange);"></i>
+                        </a>
+                    </p>
                 </div>
             </div>
 
