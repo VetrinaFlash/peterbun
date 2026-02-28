@@ -24,13 +24,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: linear-gradient(to bottom, var(--bg-dark), var(--bg-choco)); color: var(--text-cream); padding-bottom: 120px; min-height: 100vh; }
 
-        /* HEADER MODIFICATO CON TESTI GRANDI E GRASSETTO */
+        /* HEADER */
         header { position: relative; text-align: center; padding: 30px 20px 70px; background: var(--bg-header); overflow: hidden; }
         .header-content { position: relative; z-index: 2; }
         .brand-logo { max-width: 200px; max-height: 120px; margin: 0 auto 10px; display: block; object-fit: contain; mix-blend-mode: multiply; }
-        header h1 { font-size: 2.2rem; font-weight: 900; color: var(--text-dark); margin-bottom: 5px; }
         
-        /* Nuovi Stili per i Sottotitoli Hero nel Menu */
         .hero-title-main {
             color: var(--text-dark);
             font-size: 1.8rem;
@@ -88,7 +86,7 @@
         .variant-desc { font-size: 0.8rem; color: var(--accent-gold); margin-bottom: 5px; line-height: 1.4; font-weight: 500;}
         .variant-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; color: var(--text-cream); font-weight: 700; margin-bottom: 5px;}
 
-        /* MODALI (Custom, Recap, Checkout) */
+        /* MODALI */
         .checkout-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 15px; }
         .checkout-modal.active { display: flex; }
         .checkout-content { background: var(--bg-choco); border: 1px solid var(--accent-gold); border-radius: 20px; width: 100%; max-width: 500px; position: relative; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.5);}
@@ -104,7 +102,7 @@
         .custom-option-left { display: flex; align-items: center; width: 100%; }
         .custom-option-left input { margin-right: 15px; accent-color: var(--accent-gold); transform: scale(1.3); }
 
-        /* LISTA RECAP */
+        /* LISTA RECAP & CESTINO */
         .recap-list { 
             background: rgba(0,0,0,0.2); 
             border-radius: 16px; 
@@ -117,6 +115,21 @@
         .recap-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; margin-bottom: 12px; border-bottom: 1px dashed rgba(255,193,7,0.1); padding-bottom: 12px;}
         .recap-item:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0;}
         .recap-item-info strong { color: var(--accent-gold); font-size: 1.1rem; margin-right: 8px;}
+        
+        .btn-remove-recap {
+            background: rgba(255, 82, 82, 0.1);
+            color: #ff5252;
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-remove-recap:active { background: #ff5252; color: #fff; }
         
         /* UPSELL CARDS */
         .upsell-container { 
@@ -185,7 +198,7 @@
         .cart-total span { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
         .btn-checkout { background: linear-gradient(45deg, var(--accent-gold), #ff9800); color: #3e2723; border: none; padding: 12px 24px; border-radius: 50px; font-weight: 800; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(255,193,7,0.3);}
 
-        /* MEDIA QUERIES PER PC DESKTOP E TABLET */
+        /* MEDIA QUERIES */
         @media (min-width: 768px) {
             .filters-container { justify-content: center; flex-wrap: wrap; overflow-x: visible; }
             .category-section { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
@@ -302,20 +315,18 @@
     </div>
 
     <script>
-        // ⚠️ I PREZZI SONO IMPOSTATI SU 4.50. PUOI MODIFICARLI QUI IN QUALSIASI MOMENTO ⚠️
         const gustiBase = [
-            { name: "Nut & White", desc: "Cioccolato Bianco, Nocciolata", price: 4.50 },
-            { name: "Nicolino", desc: "Crema al Latte, Confettura d'Albicocche", price: 4.50 },
-            { name: "Cereali", desc: "Crema Kinder, Crema al Latte, Snack Kinder Cereali", price: 4.50 },
-            { name: "Paradiso", desc: "Nocciolata, Crema al Latte, Kinder Paradiso", price: 4.50 },
-            { name: "Pinguì", desc: "Cioccolato Bianco, Nocciolata, Kinder Pinguì", price: 4.50 },
-            { name: "Pistallato", desc: "Crema al Pistacchio, Cioccolato Fondente", price: 4.50 },
-            { name: "Americano", desc: "Burro d'Arachidi, Confettura alle Ciliegie", price: 4.50 },
-            { name: "Nutella", desc: "Crema Nutella Classica", price: 4.50 },
-            { name: "Kinder", desc: "Crema Kinder Classica", price: 4.50 }
+            { name: "Nut & White", desc: "Cioccolato Bianco, Nocciolata", priceBun: 2.70, priceCrepe: 3.00 },
+            { name: "Nicolino", desc: "Crema al Latte, Confettura d'Albicocche", priceBun: 2.90, priceCrepe: 3.20 },
+            { name: "Cereali", desc: "Crema Kinder, Crema al Latte, Snack Kinder Cereali", priceBun: 4.40, priceCrepe: 4.70 },
+            { name: "Paradiso", desc: "Nocciolata, Crema al Latte, Kinder Paradiso", priceBun: 4.60, priceCrepe: 4.90 },
+            { name: "Pinguì", desc: "Cioccolato Bianco, Nocciolata, Kinder Pinguì", priceBun: 5.00, priceCrepe: 5.30 },
+            { name: "Pistallato", desc: "Crema al Pistacchio, Cioccolato Fondente", priceBun: 3.50, priceCrepe: 3.80 },
+            { name: "Americano", desc: "Burro d'Arachidi, Confettura alle Ciliegie", priceBun: 4.30, priceCrepe: 3.90 },
+            { name: "Nutella", desc: "Crema Nutella Classica", priceBun: 2.80, priceCrepe: 3.10 },
+            { name: "Kinder", desc: "Crema Kinder Classica", priceBun: 2.70, priceCrepe: 3.00 }
         ];
 
-        // Generazione categorie dinamica con gestione "Presto in arrivo"
         const menuData = [
             {
                 id: "peter-bun",
@@ -324,7 +335,7 @@
                     id: 100 + index, 
                     name: `Bun ${g.name}`, 
                     desc: g.desc, 
-                    price: g.price,
+                    price: g.priceBun,
                     comingSoon: false
                 }))
             },
@@ -335,7 +346,7 @@
                     id: 200 + index, 
                     name: `Crepes ${g.name}`, 
                     desc: g.desc, 
-                    price: g.price,
+                    price: g.priceCrepe,
                     comingSoon: false
                 }))
             },
@@ -347,7 +358,7 @@
                     name: `Sandwich ${g.name}`, 
                     desc: g.desc, 
                     price: 0,
-                    comingSoon: true // ⬅️ Disabilita l'acquisto e mostra il badge
+                    comingSoon: true 
                 }))
             },
             {
@@ -403,9 +414,7 @@
                 sectionDiv.innerHTML = `<h2 class="category-title">${category.category}</h2>`;
                 category.items.forEach(item => {
                     
-                    // Logica "Presto in arrivo"
                     let customBtn = (category.id === 'bevande' || item.comingSoon) ? '' : `<button class="btn-custom" onclick="openCustomModal(${item.id})"><i class="fa-solid fa-pen"></i> Personalizza</button>`;
-                    
                     let priceDisplay = item.comingSoon ? `<span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Presto in Arrivo</span>` : `${item.price.toFixed(2).replace('.',',')}€`;
                     
                     let controlsHtml = item.comingSoon ? '' : `
@@ -437,7 +446,6 @@
             });
         }
 
-        // --- GESTIONE CARRELLO E QUANTITA' ---
         function handleAddClick(id) {
             if(itemMap[id].comingSoon) return;
             updateQty(id, 1);
@@ -503,7 +511,6 @@
             if (totalItems > 0) footer.classList.add('visible'); else footer.classList.remove('visible');
         }
 
-        // --- PERSONALIZZAZIONE RIMOZIONE INGREDIENTI ---
         function openCustomModal(id) {
             currentCustomItemId = id;
             const item = itemMap[id];
@@ -581,24 +588,44 @@
             closeCustomModal();
         }
 
-        // --- RECAP E LOGICA UPSELL GOLOSO ---
+        // FUNZIONE PER RIMUOVERE ITEM DAL RECAP
+        function removeFromRecap(id) {
+            if(cart[id] > 0) {
+                updateQty(id, -cart[id]); // Azzera la quantità nel carrello reale
+                openRecap(); // Ricarica il recap aggiornato
+            }
+        }
+
         function openRecap() {
             const recapContainer = document.getElementById('recap-list-container');
             recapContainer.innerHTML = '';
             
+            let totalCartItems = 0;
+
             for(let id in cart) {
                 if (cart[id] > 0 && itemMap[id]) {
+                    totalCartItems += cart[id];
                     let item = itemMap[id];
                     let lineTotal = item.price * cart[id];
                     let customTesto = item.isCustom && item.removed.length > 0 ? `<br><small style="color:var(--text-muted);">- Senza ${item.removed.join(', ')}</small>` : "";
                     
+                    // Aggiunto il tasto cestino
                     recapContainer.innerHTML += `
                         <div class="recap-item">
                             <div class="recap-item-info"><strong>${cart[id]}x</strong> ${item.name} ${customTesto}</div>
-                            <div style="color:var(--accent-gold); font-weight:700;">${lineTotal.toFixed(2).replace('.',',')}€</div>
+                            <div style="display:flex; align-items:center; gap: 12px;">
+                                <div style="color:var(--accent-gold); font-weight:700;">${lineTotal.toFixed(2).replace('.',',')}€</div>
+                                <button class="btn-remove-recap" onclick="removeFromRecap('${id}')"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
                         </div>
                     `;
                 }
+            }
+
+            // Se il carrello è stato svuotato tutto dal recap, chiudilo
+            if (totalCartItems === 0) {
+                closeRecap();
+                return;
             }
 
             const upsellContainer = document.getElementById('upsell-container');
@@ -659,7 +686,6 @@
             document.getElementById('checkout-modal').classList.remove('active'); 
         }
 
-        // --- GESTIONE ORARI (Ogni 15 min) ---
         function popolaOrari() {
             const select = document.getElementById('orario-consegna');
             select.innerHTML = '';
@@ -696,7 +722,6 @@
             }
         }
 
-        // --- INVIO A SUMUP E PAGA.JS ---
         async function sendOrderWithDetails() {
             const name = document.getElementById('cust-name').value.trim();
             const orario = document.getElementById('orario-consegna').value;
@@ -738,7 +763,6 @@
             btn.disabled = true;
 
             try {
-                // Chiamata al backend /paga per farti dare il token di SumUp
                 const response = await fetch("/paga", {
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' },
