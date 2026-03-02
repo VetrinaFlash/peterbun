@@ -250,6 +250,10 @@
         🔥 SCONTO 10% SOPRA I 15€ | SCONTO 20% SOPRA I 30€ 🔥
     </div>
 
+    <div id="store-closed-banner" style="display: none; background: #d32f2f; color: #fff; text-align: center; padding: 10px 15px; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; z-index: 200; position: relative; box-shadow: 0 4px 10px rgba(211, 47, 47, 0.4);">
+        ⚠️ IL LOCALE È ATTUALMENTE CHIUSO. NON È POSSIBILE ORDINARE. ⚠️
+    </div>
+
     <header>
         <div class="header-content">
             <img src="images/logo.png" alt="Peter Bun" class="brand-logo" onerror="this.style.display='none'; document.getElementById('brand-text').style.display='block';">
@@ -420,6 +424,86 @@
         let itemMap = {};
         let currentCustomItemId = null;
 
+        // CALCOLO ORARI DI APERTURA E CHIUSURA (INCLUSO BLOCCAGGI)
+        function getAvailableSlots() {
+            let slots = [];
+            let now = new Date();
+            now.setMinutes(now.getMinutes() + 15);
+            
+            let actualDay = now.getDay();
+            let actualHour = now.getHours();
+            let actualMin = now.getMinutes();
+
+            // Riconosce la "Notte" come parte del giorno prima
+            let logicalDay = actualDay;
+            let calcHour = actualHour;
+            if (actualHour < 5) {
+                logicalDay = actualDay === 0 ? 6 : actualDay - 1;
+                calcHour += 24; 
+            }
+
+            // Orari apertura Peter Bun in minuti (da mezzanotte)
+            const schedule = {
+                1: null, // Lunedì Chiuso
+                2: { open: 18 * 60, close: 25 * 60 }, // Mar (18:00 - 01:00)
+                3: { open: 18 * 60, close: 25 * 60 }, // Mer (18:00 - 01:00)
+                4: { open: 18 * 60, close: 25 * 60 }, // Gio (18:00 - 01:00)
+                5: { open: 18 * 60, close: 26 * 60 + 30 }, // Ven (18:00 - 02:30)
+                6: { open: 18 * 60, close: 26 * 60 + 30 }, // Sab (18:00 - 02:30)
+                0: { open: 17 * 60 + 30, close: 25 * 60 } // Dom (17:30 - 01:00)
+            };
+
+            let todaySchedule = schedule[logicalDay];
+            let currentMins = calcHour * 60 + actualMin;
+
+            if (todaySchedule) {
+                let firstAvailable = currentMins;
+                let remainder = firstAvailable % 15;
+                if (remainder !== 0) {
+                    firstAvailable += (15 - remainder);
+                }
+
+                let startMins = Math.max(firstAvailable, todaySchedule.open);
+
+                // Generazione orari disponibili
+                for (let t = startMins; t <= todaySchedule.close; t += 15) {
+                    let displayH = Math.floor(t / 60) % 24;
+                    let displayM = t % 60;
+                    
+                    let hh = String(displayH).padStart(2, '0');
+                    let mm = String(displayM).padStart(2, '0');
+                    
+                    slots.push(`${hh}:${mm}`);
+                }
+            }
+            return slots;
+        }
+
+        // CONTROLLA SE IL NEGOZIO E' APERTO E BLOCCA IL CHECKOUT SE E' CHIUSO
+        function checkStoreStatus() {
+            let slots = getAvailableSlots();
+            const btnCheckout = document.querySelector('.btn-checkout');
+            const storeClosedBanner = document.getElementById('store-closed-banner');
+            
+            if(slots.length === 0) {
+                if(storeClosedBanner) storeClosedBanner.style.display = 'block';
+                if(btnCheckout) {
+                    btnCheckout.innerHTML = '<i class="fa-solid fa-store-slash"></i> Chiuso';
+                    btnCheckout.style.background = '#795548'; 
+                    btnCheckout.style.boxShadow = 'none';
+                    btnCheckout.style.pointerEvents = 'none'; 
+                }
+            } else {
+                if(storeClosedBanner) storeClosedBanner.style.display = 'none';
+                if(btnCheckout) {
+                    btnCheckout.innerHTML = '<i class="fa-solid fa-cart-shopping"></i> Checkout';
+                    btnCheckout.style.background = 'linear-gradient(45deg, var(--accent-gold), #ff9800)'; 
+                    btnCheckout.style.boxShadow = '0 4px 10px rgba(255,193,7,0.3)';
+                    btnCheckout.style.pointerEvents = 'auto'; 
+                }
+            }
+        }
+
         function buildItemMap() {
             menuData.forEach(cat => cat.items.forEach(i => { 
                 i.categoryId = cat.id; 
@@ -431,6 +515,10 @@
             buildItemMap();
             renderFilters(); 
             renderMenu(); 
+            
+            // Check apertura al caricamento e poi ogni minuto
+            checkStoreStatus();
+            setInterval(checkStoreStatus, 60000);
         }
 
         function renderFilters() {
@@ -750,6 +838,14 @@
         }
 
         function proceedToCheckout() {
+            // Controlliamo un'ultima volta prima di aprire se per caso il locale ha chiuso mentre decidevano
+            let slots = getAvailableSlots();
+            if (slots.length === 0) {
+                alert("Ci dispiace, il locale ha appena chiuso la ricezione degli ordini per oggi.");
+                closeRecap();
+                return;
+            }
+
             closeRecap();
             popolaOrari();
 
@@ -803,37 +899,21 @@
 
         function popolaOrari() {
             const select = document.getElementById('orario-consegna');
+            const btnPay = document.getElementById('pay-btn');
             select.innerHTML = '';
             
-            let now = new Date();
-            now.setMinutes(now.getMinutes() + 15);
-            
-            let h = now.getHours();
-            let m = now.getMinutes();
-            
-            let remainder = m % 15;
-            if (remainder !== 0) {
-                m = m + (15 - remainder);
-            }
-            if (m >= 60) { m -= 60; h++; }
+            let slots = getAvailableSlots();
 
-            let slotAggiunti = 0;
-            for(let i=0; i<12; i++) {
-                if (h > 23) break; 
-                
-                let hh = String(h).padStart(2, '0');
-                let mm = String(m).padStart(2, '0');
-                
-                select.innerHTML += `<option value="${hh}:${mm}">${hh}:${mm}</option>`;
-                slotAggiunti++;
-                
-                m += 15;
-                if (m >= 60) { m -= 60; h++; }
-            }
-
-            if (slotAggiunti === 0) {
-                select.innerHTML = `<option value="">Locale chiuso</option>`;
-                document.getElementById('pay-btn').disabled = true;
+            if (slots.length === 0) {
+                select.innerHTML = `<option value="">Locale chiuso al momento</option>`;
+                btnPay.disabled = true;
+                btnPay.style.opacity = '0.5';
+            } else {
+                slots.forEach(slot => {
+                    select.innerHTML += `<option value="${slot}">${slot}</option>`;
+                });
+                btnPay.disabled = false;
+                btnPay.style.opacity = '1';
             }
         }
 

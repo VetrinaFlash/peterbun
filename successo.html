@@ -40,6 +40,8 @@
     </style>
 </head>
 <body>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com"></script>
 
     <div class="card">
         <div class="icon-circle">
@@ -55,6 +57,11 @@
     </div>
 
     <script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+		
+		gtag('config', '901797589044542');
         function sendFinalWhatsApp() {
             let orderMessage = localStorage.getItem('peterbun_order_message');
             
