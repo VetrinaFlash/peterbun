@@ -251,13 +251,12 @@
     </div>
 
     <div id="store-closed-banner" style="display: none; background: #d32f2f; color: #fff; text-align: center; padding: 10px 15px; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; z-index: 200; position: relative; box-shadow: 0 4px 10px rgba(211, 47, 47, 0.4);">
-        ⚠️ IL LOCALE È ATTUALMENTE CHIUSO. NON È POSSIBILE ORDINARE. ⚠️
+        ⚠️ IL LOCALE È CHIUSO. SI ORDINA SOLO VENERDÌ, SABATO E DOMENICA. ⚠️
     </div>
 
     <header>
         <div class="header-content">
             <img src="images/logo.png" alt="Peter Bun" class="brand-logo" onerror="this.style.display='none'; document.getElementById('brand-text').style.display='block';">
-            <h1 id="brand-text" style="display: none; color: #3e2723;">PETER BUN</h1>
             
             <h2 class="hero-title-main">La 1° Paninoteca<br>Dolce d'Italia</h2>
             <h3 class="hero-subtitle-action">Ordina qui e ritira in sede</h3>
@@ -445,12 +444,12 @@
             // Orari apertura Peter Bun in minuti (da mezzanotte)
             const schedule = {
                 1: null, // Lunedì Chiuso
-                2: { open: 18 * 60, close: 25 * 60 }, // Mar (18:00 - 01:00)
-                3: { open: 18 * 60, close: 25 * 60 }, // Mer (18:00 - 01:00)
-                4: { open: 18 * 60, close: 25 * 60 }, // Gio (18:00 - 01:00)
-                5: { open: 18 * 60, close: 26 * 60 + 30 }, // Ven (18:00 - 02:30)
-                6: { open: 18 * 60, close: 26 * 60 + 30 }, // Sab (18:00 - 02:30)
-                0: { open: 17 * 60 + 30, close: 25 * 60 } // Dom (17:30 - 01:00)
+                2: null, // Martedì Chiuso
+                3: null, // Mercoledì Chiuso
+                4: null, // Giovedì Chiuso
+                5: { open: 18 * 60, close: 27 * 60 }, // Ven (18:00 - 03:00)
+                6: { open: 18 * 60, close: 27 * 60 }, // Sab (18:00 - 03:00)
+                0: { open: 17 * 60, close: 26 * 60 } // Dom (17:00 - 02:00)
             };
 
             let todaySchedule = schedule[logicalDay];
